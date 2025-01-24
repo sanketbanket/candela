@@ -1,0 +1,10 @@
+^F:\DEV_STUFF\RAY_TRACER\CANDELA\BUILD\CMAKEFILES\B5768B78886381A3EACAA202CCF0FEC8\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SF:/dev_stuff/ray_tracer/candela -BF:/dev_stuff/ray_tracer/candela/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file F:/dev_stuff/ray_tracer/candela/build/candela.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
