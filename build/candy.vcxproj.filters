@@ -4,6 +4,9 @@
     <ClCompile Include="F:\dev_stuff\ray_tracer\candela\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="F:\dev_stuff\ray_tracer\candela\util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="F:\dev_stuff\ray_tracer\candela\CMakeLists.txt" />
