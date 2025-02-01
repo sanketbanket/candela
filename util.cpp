@@ -7,7 +7,7 @@
 
 int ImageOutputFromMatrix(vector<vector<glm::vec3>> image_array) //get output image from matrix
 {
-std::ofstream outFile("output.ppm");
+std::ofstream outFile("../../output.ppm");
 if(!outFile){
     std::cerr << "fucked up";
     return 1;

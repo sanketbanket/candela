@@ -2,6 +2,7 @@
 #define RAY_H
 
 #include "glm/glm.hpp"
+#include "color.h"
 
 
 class ray {
@@ -20,6 +21,9 @@ class ray {
     } 
     const glm::vec3 direction() {
         return dir;
+    }
+    const glm::vec3 get_color(){
+        return glm::vec3(0.5f, 0.7f, 1.0f);
     }
 
 };

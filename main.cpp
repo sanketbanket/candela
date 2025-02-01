@@ -1,6 +1,7 @@
 #include <iostream>
 #include "util.h"
 #include "ray.h"
+#include "sphere.h"
 
 
 int main(){
@@ -22,7 +23,7 @@ int main(){
     auto h_delta_vector = horizontal / float(image_width); 
     auto v_delta_vector = vertical  / float(image_height);
 
-    auto upper_left_corner = camera_origin - horizontal / 2.0f + vertical / 2.0f - glm::vec3(0.0f, 0.0f, focal_length);
+    auto upper_left_corner = camera_origin - (horizontal / 2.0f) - (vertical / 2.0f) - glm::vec3(0.0f, 0.0f, focal_length);
     auto pixel_00_loc = upper_left_corner + float(0.5)*h_delta_vector + float(0.5)*v_delta_vector;
 
 
@@ -30,12 +31,32 @@ int main(){
 
     vector<vector<glm::vec3>> image(image_height, vector<glm::vec3>(image_width, glm::vec3(0.0f, 0.0f, 0.0f)));
 
+    //create a test sphere
+    sphere test_sphere(glm::vec3(0.0f, 0.0f, -2.0f), 0.5f);
+
     for(int i = 0; i < image_height; i++){
         std::clog << "\rScanlines remaining: " << (image_height - i) << ' ' << std::flush;
         for(int j = 0; j < image_width; j++){
-            auto pixel_center = pixel_00_loc + (float(i) * h_delta_vector) + (float(j) * v_delta_vector);
-            auto raydir = pixel_center - camera_origin;
-            image[i][j] = glm::vec3(float(i) / image_height, 0.6f, 1.0f);
+            auto pixel_center = pixel_00_loc + (float(j) * h_delta_vector) + (float(i) * v_delta_vector);
+            glm::vec3 raydir = pixel_center - camera_origin;
+
+            if (i == image_height / 2 && j == image_width / 2) {
+                std::cout << "Ray Origin: (" << camera_origin.x << ", " << camera_origin.y << ", " << camera_origin.z << ")\n";
+                std::cout << "Ray Direction: (" << raydir.x << ", " << raydir.y << ", " << raydir.z << ")\n";
+            }
+
+            ray r(camera_origin, raydir);
+            float t = test_sphere.hit_sphere(r);
+            //std::cout<<t;
+
+            if(t != -1.0){
+                image[i][j] = test_sphere.normal_color(r, t);
+            }
+            else{
+                image[i][j] = glm::vec3(0.7f, 0.7f, 1.0f);
+            }
+
+            //image[i][j] = glm::vec3(float(i) / image_height, 0.6f, 1.0f);
         }
     }
 
