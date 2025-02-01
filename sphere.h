@@ -7,10 +7,11 @@
 #include "ray.h"
 #include "color.h"
 #include <iostream>
+#include "hittable.h"
 
 
 
-class sphere{
+class sphere : public hittable{
     public : 
     glm::vec3 center;
     float radius;
@@ -19,7 +20,7 @@ class sphere{
     sphere(glm::vec3 center, float radius) : center(center), radius(radius){};  
 
 
-    float hit_sphere(ray &r){    //determines if the ray hits the sphere
+    bool hit(ray &r, float ray_tmin, float ray_tmax, hit_record &rec) const override {    //determines if the ray hits the sphere
         glm::vec3 oc = center - r.origin();
         float a = glm::dot(r.direction(), r.direction());
         float h = glm::dot(r.direction(), oc);
@@ -29,17 +30,24 @@ class sphere{
 
         
         if(disc < 0){
-            return -1.0;
-        }else{
-            return (h - sqrt(disc)) /  a;
+            return false;
+
         }
+        auto root = (h - sqrt(disc) )/ a;
+        if(root <= ray_tmin || ray_tmax <= root){
+            root = h + sqrt(disc) / a;
+            if(root <= ray_tmin || ray_tmax <= root){
+                return false;
+            }
+        }
+        rec.t = root;
+        rec.p = r.origin() + root * r.direction();
+        rec.normal = glm::normalize(rec.p - center);
+        rec.set_face_normal(r, rec.normal);
+        return true;
         
     }
 
-    glm::vec3 normal_color(ray &r, float t){
-        glm::vec3 normal = glm::normalize(r.origin() + t * r.direction() - center);
-        return 0.5f * (normal + glm::vec3(1.0f));
-    }
 };
 
 #endif 

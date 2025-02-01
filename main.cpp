@@ -2,6 +2,7 @@
 #include "util.h"
 #include "ray.h"
 #include "sphere.h"
+#include "hittable_list.h"
 
 
 int main(){
@@ -32,7 +33,12 @@ int main(){
     vector<vector<glm::vec3>> image(image_height, vector<glm::vec3>(image_width, glm::vec3(0.0f, 0.0f, 0.0f)));
 
     //create a test sphere
-    sphere test_sphere(glm::vec3(0.0f, 0.0f, -2.0f), 0.5f);
+    sphere test_sphere1(glm::vec3(0.0f, 0.0f, -2.0f), 0.5f);
+    sphere test_sphere2(glm::vec3(1.0f, 0.0f, -3.0f), 1.0f);
+
+    hittable_list objects;
+    objects.add(std::make_shared<sphere>(test_sphere1));
+    objects.add(std::make_shared<sphere>(test_sphere2));
 
     for(int i = 0; i < image_height; i++){
         std::clog << "\rScanlines remaining: " << (image_height - i) << ' ' << std::flush;
@@ -46,11 +52,15 @@ int main(){
             }
 
             ray r(camera_origin, raydir);
-            float t = test_sphere.hit_sphere(r);
-            //std::cout<<t;
+            hit_record rec;
 
-            if(t != -1.0){
-                image[i][j] = test_sphere.normal_color(r, t);
+            //std::cout<<t;
+            bool y = objects.hit(r, 0.0, 1000.0, rec);
+
+            if(y){
+                //image[i][j] = test_sphere1.normal_color(r, rec.t);
+                image[i][j] = normal_color(r, rec.normal);
+
             }
             else{
                 image[i][j] = glm::vec3(0.7f, 0.7f, 1.0f);
