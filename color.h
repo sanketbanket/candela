@@ -12,9 +12,9 @@ class color{
 
 };
 
-
-glm::vec3 normal_color(ray &r, glm::vec3 normal){
+/*
+glm::vec3 normal_color(glm::vec3 normal){
     return 0.5f * (normal + glm::vec3(1.0f));
 }
-
+*/
 #endif

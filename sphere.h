@@ -20,7 +20,7 @@ class sphere : public hittable{
     sphere(glm::vec3 center, float radius) : center(center), radius(radius){};  
 
 
-    bool hit(ray &r, float ray_tmin, float ray_tmax, hit_record &rec) const override {    //determines if the ray hits the sphere
+    bool hit(ray &r, interval &inter, hit_record &rec) const override {    //determines if the ray hits the sphere
         glm::vec3 oc = center - r.origin();
         float a = glm::dot(r.direction(), r.direction());
         float h = glm::dot(r.direction(), oc);
@@ -34,16 +34,20 @@ class sphere : public hittable{
 
         }
         auto root = (h - sqrt(disc) )/ a;
-        if(root <= ray_tmin || ray_tmax <= root){
+        if(!inter.contains(root)){
             root = h + sqrt(disc) / a;
-            if(root <= ray_tmin || ray_tmax <= root){
+            if(!inter.contains(root)){
                 return false;
             }
         }
+        
         rec.t = root;
         rec.p = r.origin() + root * r.direction();
         rec.normal = glm::normalize(rec.p - center);
         rec.set_face_normal(r, rec.normal);
+
+        
+
         return true;
         
     }

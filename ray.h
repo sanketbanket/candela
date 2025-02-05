@@ -9,12 +9,14 @@ class ray {
     private : 
     glm::vec3 orig;
     glm::vec3 dir;
+    glm::vec3 color;
     public  :
     ray (){};
 
-    ray(const glm::vec3 origin, const glm::vec3 direction){
+    ray(const glm::vec3 origin, const glm::vec3 direction , const glm::vec3 col = glm::vec3(0, 0, 0)){
         dir = glm::normalize(direction);
         orig = origin;
+        color = col;
     }
     const glm::vec3 origin (){
         return orig;
@@ -23,7 +25,10 @@ class ray {
         return dir;
     }
     const glm::vec3 get_color(){
-        return glm::vec3(0.5f, 0.7f, 1.0f);
+        return color;
+    }
+    const void set_color(glm::vec3 col){
+        color = col;
     }
 
 };
