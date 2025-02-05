@@ -39,7 +39,7 @@ class camera{
         this->focal_length = focal;
     };
 
-    void Render(hittable_list &hitlist, vec3 ambient, int samples = 1);
+    void Render(hittable_list &hitlist, vec3 &ambient, int samples = 1);
 
 };
 

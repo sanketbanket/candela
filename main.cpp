@@ -18,8 +18,8 @@ int main(){
     vec3 cam_origin(0.0f, 0.3f, 0.0f);
     
     camera scene_cam(cam_origin, vec3(0.0f, -0.7f, -1.0f),1000, 2.0f, 2.0f, 0.5f);
-    scene_cam.Render(world, vec3(0.3f, 0.3f, 0.3f));
-    
+    scene_cam.Render(world, vec3(0.3f, 0.3f, 0.3f),32);
+
     
     return 0;
 

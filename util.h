@@ -10,6 +10,7 @@
 #include "color.h"
 #include <limits>
 #include <cmath>
+#include <random>
 
 using std::vector;
 
@@ -19,5 +20,7 @@ int ImageOutputFromMatrix(vector<vector<glm::vec3>> image_array);
 
 float degrees_to_radians(double degrees);
 
+float random_float();
+float random_float(float min, float max);
 
 #endif

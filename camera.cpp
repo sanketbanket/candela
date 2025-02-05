@@ -1,6 +1,6 @@
 #include "camera.h"
 
-void camera::Render(hittable_list &hitlist, vec3 ambient, int samples)//renders the current scene
+void camera::Render(hittable_list &hitlist, vec3 &ambient, int samples)//renders the current scene
 {
     //set up the image
     int image_height_px = image_width_px / aspect_ratio;
@@ -24,7 +24,8 @@ void camera::Render(hittable_list &hitlist, vec3 ambient, int samples)//renders 
     for(int i = 0; i < image_height_px; i++)   //iterate rows
     {
         for(int j = 0; j < image_width_px; j++)   //iterate columns
-        {
+        {   
+            /*
             hit_record rec;
             ray r(origin, pixel_00 + v_delta_vector * float(i) + h_delta_vector * float(j)); 
 
@@ -34,6 +35,22 @@ void camera::Render(hittable_list &hitlist, vec3 ambient, int samples)//renders 
             else{
                 image[i][j] = ambient;
             }//shoot ray
+            */
+            vec3 color(0.0f, 0.0f, 0.0f);
+           for(int s = 0; s < samples; s++)
+           {
+            hit_record rec;
+            ray r(origin, upper_left_corner + v_delta_vector * random_float(i, i+1) + h_delta_vector * random_float(j, j+1)); 
+            if(hitlist.hit(r, interval(0.01f, 1000.0f) , rec)){
+                color += 0.5f* (rec.normal + glm::vec3(1.0f));
+            }
+            else{
+                color += ambient;
+            }
+            
+           }
+           color = color / float(samples);
+           image[i][j] = color;
         }
     }
 

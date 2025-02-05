@@ -32,6 +32,17 @@ return 0;
 }
 
 
+float random_float()  //return real number between 0 and 1
+{
+    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+    static std::mt19937 generator;
+    return distribution(generator);
+}
+
+float random_float(float min, float max) //return real number between [min and max) , max exclusive
+{
+    return min + (max - min) * random_float();
+}
 
 
 
