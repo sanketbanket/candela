@@ -1,6 +1,6 @@
 #include "camera.h"
 
-void camera::Render(hittable_list &hitlist, vec3 &ambient, int samples)//renders the current scene
+void camera::Render(hittable_list &world, vec3 &ambient, int samples)//renders the current scene
 {
     //set up the image
     int image_height_px = image_width_px / aspect_ratio;
@@ -25,38 +25,24 @@ void camera::Render(hittable_list &hitlist, vec3 &ambient, int samples)//renders
     {
         for(int j = 0; j < image_width_px; j++)   //iterate columns
         {   
-            /*
-            hit_record rec;
-            ray r(origin, pixel_00 + v_delta_vector * float(i) + h_delta_vector * float(j)); 
-
-            if(hitlist.hit(r, interval(0.01f, 1000.0f) , rec)){
-            image[i][j] = 0.5f *(rec.normal + glm::vec3(1.0f));
-            }
-            else{
-                image[i][j] = ambient;
-            }//shoot ray
-            */
             vec3 color(0.0f, 0.0f, 0.0f);
            for(int s = 0; s < samples; s++)
            {
-            hit_record rec;
+            //hit_record rec;
             ray r(origin, upper_left_corner + v_delta_vector * random_float(i, i+1) + h_delta_vector * random_float(j, j+1)); 
-            if(hitlist.hit(r, interval(0.01f, 1000.0f) , rec)){
-                color += 0.5f* (rec.normal + glm::vec3(1.0f));
-            }
-            else{
-                color += ambient;
-            }
-            
+
+            color += get_ray_color(r, world, ambient, vec3(0.8f, 0.2f, 0.4f) * 0.8f, 8);  //sample the color of the pixel
            }
            color = color / float(samples);
            image[i][j] = color;
         }
     }
 
+
     ImageOutputFromMatrix(image);
 
     // Print relevant information
+    if(1){
     std::cout << "Image Width (px): " << image_width_px << std::endl;
     std::cout << "Image Height (px): " << image_height_px << std::endl;
     std::cout << "Aspect Ratio: " << actual_aspect_ratio << std::endl;
@@ -68,4 +54,30 @@ void camera::Render(hittable_list &hitlist, vec3 &ambient, int samples)//renders
     std::cout << "Upper Left Corner: (" << upper_left_corner.x << ", " << upper_left_corner.y << ", " << upper_left_corner.z << ")" << std::endl;
     std::cout << "Horizontal Delta Vector: (" << h_delta_vector.x << ", " << h_delta_vector.y << ", " << h_delta_vector.z << ")" << std::endl;
     std::cout << "Vertical Delta Vector: (" << v_delta_vector.x << ", " << v_delta_vector.y << ", " << v_delta_vector.z << ")" << std::endl;
+    }
+}
+
+
+
+vec3 get_ray_color(ray r , hittable_list &world, vec3 ambient,vec3 &debug_color, int bounces ){
+    if(bounces <= 0){
+        return vec3(0.0f, 0.0f, 0.0f);  //return black if no bounces left
+    }
+    vec3 color(0.0f);
+    vec3 temp_color(0.0f);
+    hit_record rec;
+    if(world.hit(r, interval(0.001f, 1000.0f), rec)){
+
+        vec3 random_unit_vector = glm::vec3(random_float(), random_float(), random_float());
+        while(glm::dot(random_unit_vector, random_unit_vector) <= 1e-6){
+            random_unit_vector = glm::vec3(random_float(), random_float(), random_float());
+        }  //acounting for lambertian diffuse
+
+        ray scattered(rec.p, rec.normal + random_unit_vector);
+        return debug_color * get_ray_color(scattered, world, ambient, debug_color,bounces - 1);
+    }
+    else{
+        return ambient;
+    }
+
 }

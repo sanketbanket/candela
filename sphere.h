@@ -11,13 +11,16 @@
 
 
 
-class sphere : public hittable{
+class sphere : public hittable{   //derived from hittable class
     public : 
     glm::vec3 center;
     float radius;
+    
+    std::shared_ptr<material> mat;
 
-    sphere() : center(glm::vec3(0.0f, 0.0f, 0.0f)), radius(0.0f){};
-    sphere(glm::vec3 center, float radius) : center(center), radius(radius){};  
+    sphere() : center(glm::vec3(0.0f, 0.0f, 0.0f)), radius(0.0f), mat(nullptr){};
+    sphere(glm::vec3 center, float radius, std::shared_ptr<material> mat_ptr) : center(center), radius(radius), mat(mat_ptr){};  
+
 
 
     bool hit(ray &r, interval &inter, hit_record &rec) const override {    //determines if the ray hits the sphere
@@ -27,8 +30,6 @@ class sphere : public hittable{
         float c =   glm::dot(oc, oc) - radius * radius;
         float disc =  h*h -a*c;
         //std::cout<<"discriminant: "<<disc<<std::endl;
-
-        
         if(disc < 0){
             return false;
 
@@ -45,8 +46,7 @@ class sphere : public hittable{
         rec.p = r.origin() + root * r.direction();
         rec.normal = glm::normalize(rec.p - center);
         rec.set_face_normal(r, rec.normal);
-
-        
+        rec.mat_ptr = mat;
 
         return true;
         

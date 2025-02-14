@@ -6,6 +6,8 @@
 #include "intervals.h"
 
 
+class material;
+
 struct hit_record{
     public : 
     glm::vec3 p;
@@ -13,6 +15,14 @@ struct hit_record{
     float t;
     bool front_face;
 
+    std::shared_ptr<material> mat_ptr;
+
+    hit_record(){
+        p = glm::vec3(0.0f, 0.0f, 0.0f);
+        normal = glm::vec3(0.0f, 0.0f, 0.0f);
+        t = 0.0f;
+        front_face = false;
+    };
     void set_face_normal(ray &r, glm::vec3 &outward_normal)//sets the normal to only face outwards.
     {
         front_face = dot(r.direction(), outward_normal) < 0;

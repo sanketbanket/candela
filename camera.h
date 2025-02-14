@@ -40,9 +40,10 @@ class camera{
     };
 
     void Render(hittable_list &hitlist, vec3 &ambient, int samples = 1);
-
+    private:
+    
 };
 
-
+vec3 get_ray_color(ray r, hittable_list &world, vec3 ambient,vec3 &debug_color, int bounces = 8 );
 
 #endif

@@ -11,8 +11,10 @@
 #include <limits>
 #include <cmath>
 #include <random>
+#include <functional>
 
 using std::vector;
+using namespace glm;
 
 int ImageOutputFromMatrix(vector<vector<glm::vec3>> image_array);
 //inline constexpr float infinity = std::numeric_limits<float>::infinity();
@@ -22,5 +24,9 @@ float degrees_to_radians(double degrees);
 
 float random_float();
 float random_float(float min, float max);
+glm::vec3 random_on_hemi(glm::vec3 normal );
+
+
+vec3 get_random_unit_vector();
 
 #endif
